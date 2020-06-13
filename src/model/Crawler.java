@@ -28,7 +28,6 @@ public class Crawler {
 
 	public static LinkedList<Integer> generateMileageList(String content) {
 		LinkedList<Integer> mileageList = new LinkedList<>();
-//		String content = stringBuilder.toString();
 		for (int i = 0; i < content.length(); i++) {
 			i = content.indexOf(" <li>Przebieg: ", i);
 			if (i < 0)
@@ -74,23 +73,19 @@ public class Crawler {
 	}
 
 	public static ArrayList<Car> generateCarList(String selectedCarModel) throws IOException {
-		ExecutorService executorService = Executors.newFixedThreadPool(30);
+		// ExecutorService executorService = Executors.newFixedThreadPool(30);
 		ArrayList<Car> carList = new ArrayList<Car>();
-		for (int i = 0; i < generatePriceList(crawlString(selectedCarModel)).size(); i++) {
+		LinkedList<Integer> productionYearList = new LinkedList<>(generateProductionYearList(crawlString(selectedCarModel)));
+		LinkedList<Integer> priceList = new LinkedList<>(generatePriceList(crawlString(selectedCarModel)));
+		LinkedList<Integer> mileAgeList = new LinkedList<>(generateMileageList(crawlString(selectedCarModel)));	
+		for (int i = 0; i < productionYearList.size()-2; i++) {
 			int j = i;
-			executorService.submit(() -> {
-				try {
-					carList.add(j,
-							new Car(selectedCarModel, generateProductionYearList(crawlString(selectedCarModel)).get(j),
-									generateMileageList(crawlString(selectedCarModel)).get(j),
-									generatePriceList(crawlString(selectedCarModel)).get(j)));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
+			carList.add(j,
+					new Car(selectedCarModel, productionYearList.get(j),
+							mileAgeList.get(j),
+							priceList.get(j)));
 		}
-		System.out.println(carList);
-		executorService.shutdown();
+		// executorService.shutdown();
 		return carList;
 	}
 

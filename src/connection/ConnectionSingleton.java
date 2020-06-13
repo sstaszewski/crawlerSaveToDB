@@ -13,7 +13,7 @@ public class ConnectionSingleton {
         return instance;
     }
     public static Connection getConnection() {
-        String url = "jdbc:mysql://localhost:3307/samochodyoferty";
+        String url = "jdbc:mysql://localhost:3306/samochody";
         String user = "java";
         String password = "java";
         Connection connection= null;
